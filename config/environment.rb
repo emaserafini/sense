@@ -5,7 +5,7 @@ require_relative '../lib/sense'
 require_relative '../apps/api/application'
 
 Hanami.configure do
-  mount Api::Application, at: '/'
+  mount Api::Application, at: '/api'
 
   model do
     ##
