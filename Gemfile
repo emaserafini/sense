@@ -8,6 +8,8 @@ gem 'hanami-model', '~> 1.0'
 
 gem 'pg'
 
+gem 'bcrypt', '~> 3.1', '>= 3.1.11'
+
 group :development do
   # Code reloading
   # See: http://hanamirb.org/guides/projects/code-reloading
