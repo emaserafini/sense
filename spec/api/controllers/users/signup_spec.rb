@@ -4,12 +4,10 @@ RSpec.describe Api::Controllers::Users::Signup do
   let(:action) { described_class.new }
   let(:repository) { UserRepository.new }
 
-  before do
-    repository.clear
-  end
+  before { repository.clear }
 
   describe 'with valid params' do
-    let(:params) { Hash[email: 'foo@example.com', username: 'foo', password: 'my_secret'] }
+    let(:params) { { email: 'foo@example.com', username: 'foo', password: 'my_secret' } }
 
     it 'is signup a user' do
       action.call(params)
@@ -27,20 +25,19 @@ RSpec.describe Api::Controllers::Users::Signup do
   end
 
   describe 'with invalid params' do
-    let(:params) { Hash[email: 'invalid email', username: 's', password: ''] }
+    let(:params) { { email: 'invalid email', username: 's', password: '' } }
 
     it 'returns HTTP client error' do
       response = action.call(params)
       expect(response[0]).to eq 422
     end
 
-    it 'dumps errors in params' do
-      action.call(params)
-      errors = action.params.errors
+    it 'dumps errors from command errors' do
+      response = action.call(params)
+      command_errors = action.command.validation.errors
 
-      expect(errors[:email]).to include 'is in invalid format'
-      expect(errors[:username]).to include 'size cannot be less than 3'
-      expect(errors[:password]).to include 'must be filled'
+      body = JSON.parse response[2].first, symbolize_names: true
+      expect(command_errors).to eq body[:errors]
     end
   end
 end

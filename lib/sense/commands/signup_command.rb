@@ -1,10 +1,10 @@
-class SignupAction
+require 'bcrypt'
+
+class SignupCommand
   attr_reader :attributes, :validation, :user
 
-  def self.execute(attributes)
-    new(attributes).tap do |action|
-      action.execute
-    end
+  def self.run(attributes)
+    new(attributes).tap{ |command| command.run }
   end
 
   def initialize(attributes)
@@ -12,7 +12,7 @@ class SignupAction
     @validation = SignupValidator.new(attributes).validate
   end
 
-  def execute
+  def run
     validation.success? && register_user
   end
 
