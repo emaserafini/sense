@@ -1,7 +1,6 @@
 module Api::Controllers::Users
   class Signup
     include Api::Action
-    accept :json
 
     expose :command
 
@@ -9,7 +8,7 @@ module Api::Controllers::Users
       @command = SignupCommand.run(params)
       if @command.successful?
         self.status = 201
-        self.body = JSON.generate @command.user.to_h
+        self.body = UserRepresenter.new(@command.user).to_json
       else
         self.status = 422
         self.body = JSON.generate({ errors: @command.validation.errors, status: 422 })
